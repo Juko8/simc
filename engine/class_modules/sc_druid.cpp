@@ -1773,7 +1773,13 @@ public:
       return;
     
     // 5.25 PPM via http://us.battle.net/wow/en/forum/topic/20747154889#1
-    double chance = ab::weapon -> proc_chance_on_swing( 5.25 );
+    double chance; 
+
+    if (ab::p()->talent.moment_of_clarity->ok())
+       chance = ab::weapon->proc_chance_on_swing(10.75);
+    else
+       chance = ab::weapon->proc_chance_on_swing(5.25);
+
 
     if ( ab::p() -> sets -> has_set_bonus( DRUID_FERAL, T18, B2 ) )
       chance *= 1.0 + ab::p() -> sets -> set( DRUID_FERAL, T18, B2 ) -> effectN( 1 ).percent();
@@ -3559,7 +3565,7 @@ struct savage_roar_t : public cat_attack_t
     if ( combo_points == -1 )
       combo_points = ( int ) p() -> resources.current[ RESOURCE_COMBO_POINT ];
 
-    timespan_t d = data().duration() + timespan_t::from_seconds( 4.0 ) * combo_points;
+    timespan_t d = data().duration() + timespan_t::from_seconds( 6.0 ) * combo_points;
 
     // Maximum duration is 130% of the raw duration of the new Savage Roar.
     if ( p() -> buff.savage_roar -> check() )
@@ -10077,6 +10083,96 @@ struct druid_module_t : public module_t
 
   virtual void register_hotfixes() const override 
   { 
+     hotfix::register_effect("Druid", "2017-07-07", "All damage increased by 33% (Direct Damage)", 179694)
+        .field("base_value")
+        .operation(hotfix::HOTFIX_SET)
+        .modifier(33)
+        .verification_value(0);
+
+     hotfix::register_effect("Druid", "2017-07-07", "All damage increased by 33% (Damage over Time)", 191154)
+        .field("base_value")
+        .operation(hotfix::HOTFIX_SET)
+        .modifier(33)
+        .verification_value(0);
+
+     hotfix::register_effect("Druid", "2017-07-07", "Jagged Wounds reduced to 20% (Duration)", 297732)
+        .field("base_value")
+        .operation(hotfix::HOTFIX_SET)
+        .modifier(-20)
+        .verification_value(-33);
+
+     hotfix::register_effect("Druid", "2017-07-07", "Jagged Wounds reduced to 20% (Tick Rate)", 297777)
+        .field("base_value")
+        .operation(hotfix::HOTFIX_SET)
+        .modifier(-20)
+        .verification_value(-33);
+
+     hotfix::register_effect("Druid", "2017-07-07", "Bloodtalons reduced to 25%", 195368)
+        .field("base_value")
+        .operation(hotfix::HOTFIX_SET)
+        .modifier(25)
+        .verification_value(50);
+
+     hotfix::register_spell("Druid", "2017-07-07", "Savage Roar increased duration by 50%", 52610)
+        .field("duration")
+        .operation(hotfix::HOTFIX_MUL)
+        .modifier(1.5)
+        .verification_value(4000);
+
+     hotfix::register_effect("Druid", "2017-07-07", "Savage Roar reduced damage to 15%", 45152)
+        .field("base_value")
+        .operation(hotfix::HOTFIX_SET)
+        .modifier(15)
+        .verification_value(25);
+
+     hotfix::register_effect("Druid", "2017-07-07", "Savage Roar reduced damage to 15%", 159999)
+        .field("base_value")
+        .operation(hotfix::HOTFIX_SET)
+        .modifier(15)
+        .verification_value(25);
+
+     hotfix::register_effect("Druid", "2017-07-07", "Savage Roar reduced damage to 15%", 56034)
+        .field("base_value")
+        .operation(hotfix::HOTFIX_SET)
+        .modifier(15)
+        .verification_value(25);
+
+     hotfix::register_effect("Druid", "2017-07-07", "Moment of Clarity damage increased to 25%", 356854)
+        .field("base_value")
+        .operation(hotfix::HOTFIX_SET)
+        .modifier(25)
+        .verification_value(15);
+
+     hotfix::register_effect("Druid", "2017-07-07", "Moment of Clarity damage increased to 25%", 356853)
+        .field("base_value")
+        .operation(hotfix::HOTFIX_SET)
+        .modifier(25)
+        .verification_value(15);
+
+     hotfix::register_effect("Druid", "2017-07-07", "Incarnation energy cost reduction reduced to 50%", 310506)
+        .field("base_value")
+        .operation(hotfix::HOTFIX_SET)
+        .modifier(-50)
+        .verification_value(-60);
+
+     hotfix::register_effect("Druid", "2017-07-07", "Sabertooth damage increase to Ferocious Bite increased to 20%", 297731)
+        .field("base_value")
+        .operation(hotfix::HOTFIX_SET)
+        .modifier(20)
+        .verification_value(15);
+
+     hotfix::register_spell("Druid", "2017-07-07", "Elune's Guidance cooldown reduced to 30s", 202060)
+        .field("cooldown")
+        .operation(hotfix::HOTFIX_SET)
+        .modifier(30000)
+        .verification_value(45000);
+
+     hotfix::register_spell("Druid", "2017-07-07", "Elune's Guidance duration reduced to 5 seconds", 202060)
+        .field("duration")
+        .operation(hotfix::HOTFIX_SET)
+        .modifier(5000)
+        .verification_value(8000);
+
     /*
     hotfix::register_spell( "Druid", "2016-12-18", "Incorrect spell level for starfall damage component.", 191037 )
       .field( "spell_level" )
